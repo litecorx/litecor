@@ -3,357 +3,517 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Litecor — Editor Portfolio</title>
-<meta name="description" content="Litecor — video editor & clipper. Clipping, short-form & long-form editing. Pricing & contact." />
+<title>Litecor, Editor, Clipper</title>
+<meta name="description" content="Litecor, video editor and clipper, fast-paced, clean, attention-grabbing edits." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
-  :root{ --bg1:#071124; --bg2:#081a2b; --card: rgba(255,255,255,0.03); --accent:#6be1ff; --glass-border: rgba(255,255,255,0.06); --radius:16px; --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono','Segoe UI Mono', monospace; --ui: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; }
-  html,body{height:100%;margin:0;font-family:var(--ui);background:linear-gradient(160deg,var(--bg1),var(--bg2));color:#eaf6ff;overflow-x:hidden}
-  a{color:var(--accent);text-decoration:none}
-  canvas#bg{position:fixed;inset:0;z-index:0;display:block;pointer-events:auto}
-  .wrap{position:relative;z-index:6;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:36px}
-  .container{width:min(1100px,96vw)}
-  header{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:22px}
-  .brand{display:flex;gap:14px;align-items:center}
-  .logo{width:58px;height:58px;border-radius:12px;display:grid;place-items:center;font-weight:800;font-family:var(--mono);font-size:20px;background:linear-gradient(135deg,#5dd5ff22,#8be7ff22);border:1px solid rgba(255,255,255,0.04)}
-  h1{margin:0;font-size:clamp(18px,3.6vw,34px)}
-  .subtitle{color:#cfefff;opacity:0.9;font-size:14px}
-  .lead{font-family:var(--mono);color:var(--accent);font-weight:700;margin:6px 0}
-  .top-actions{display:flex;gap:10px;align-items:center}
-  .btn{background:transparent;border:1px solid rgba(120,200,255,0.12);padding:8px 12px;border-radius:10px;color:var(--accent);cursor:pointer;font-weight:700}
-  .hero{display:grid;grid-template-columns:1fr 360px;gap:20px;background:var(--card);padding:22px;border-radius:var(--radius);box-shadow:0 18px 50px rgba(0,0,0,0.6);border:1px solid var(--glass-border);align-items:start}
-  .left{padding-right:6px}
-  .right{padding-left:6px}
-  section.port{margin-top:18px;display:grid;gap:18px}
-  .service{display:flex;gap:16px;padding:14px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.03);align-items:center}
-  .videoSlot{width:320px;max-width:100%;border-radius:10px;background:#000;overflow:hidden;border:1px solid rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;position:relative}
-  .videoWrap{position:relative;display:inline-block;outline:none}
-  .portrait { width:220px; aspect-ratio: 9 / 16; display:flex; }
-  .portrait iframe{ width:100%; height:100%; object-fit:cover; border-radius:8px; display:block; border:0; }
-  .landscape { width:320px; aspect-ratio: 16 / 9; display:flex; }
-  .landscape iframe{ width:100%; height:100%; object-fit:cover; border-radius:8px; display:block; border:0; }
-  .fsBtn{position:absolute;right:8px;bottom:8px;background:rgba(0,0,0,0.55);color:#eaf6ff;border:none;padding:8px 10px;border-radius:8px;cursor:pointer;font-weight:700;z-index:5}
-  .svc-info{flex:1;display:flex;flex-direction:column;justify-content:space-between}
-  .price{font-size:20px;font-weight:800;color:var(--accent)}
-  .desc{color:#cfefff;opacity:0.9;font-size:13px;margin:8px 0}
-  .actions{display:flex;gap:10px;align-items:center}
-  .metaCard{border-radius:12px;padding:14px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.03)}
-  .metaCard h3{margin:0 0 8px 0}
-  .field{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:13px}
-  .socials{display:flex;gap:8px;margin-top:8px}
-  .copyBtn{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px 10px;border-radius:8px;color:#cfefff;cursor:pointer}
-  .note{font-size:13px;color:#bfe9ff;opacity:0.95;margin-top:10px}
-  footer{margin-top:18px;color:#88c9ff88;font-size:13px;text-align:center}
-  .modal{position:fixed;inset:0;display:none;z-index:60;align-items:center;justify-content:center;background:linear-gradient(180deg,rgba(1,2,6,0.6),rgba(1,2,4,0.85));backdrop-filter:blur(6px)}
-  .modalCard{width:min(680px,94vw);background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)}
-  .modalHeader{display:flex;justify-content:space-between;align-items:center}
-  .modalHeader h3{margin:0}
-  .modalForm label{display:block;font-size:13px;color:#cfefff;margin-top:8px}
-  .modalForm input,.modalForm textarea{width:100%;padding:8px;margin-top:6px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:#eaf6ff}
-  .modalForm button{margin-top:10px;background:linear-gradient(90deg,#6bb6ff,#4c9aff);border:none;color:#071124;padding:10px 12px;border-radius:8px;cursor:pointer;font-weight:700}
-  .success{color:#c8ffdb;font-weight:700;margin-top:8px}
-  /* overlay when video cannot be embedded */
-  .unavailableOverlay{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:linear-gradient(180deg,rgba(0,0,0,0.55),rgba(0,0,0,0.6));color:#fff;flex-direction:column;gap:8px;padding:12px;border-radius:8px;z-index:6}
-  .unavailableOverlay button{background:var(--accent);color:#071124;border:none;padding:8px 12px;border-radius:8px;font-weight:800;cursor:pointer}
-  @media (max-width:920px){ .hero{grid-template-columns:1fr} .videoSlot{max-width:100%} .portrait{width:38vw} .landscape{width:64vw} }
+/* ---------- Theme and layout ---------- */
+:root{
+  --bg-a:#030914;
+  --bg-b:#061427;
+  --accent1:#4db8ff;
+  --accent2:#7ae5ff;
+  --muted:rgba(191,233,255,0.55);
+  --glass: rgba(255,255,255,0.03);
+  --radius:14px;
+  --maxw:1200px;
+  --ease: cubic-bezier(.2,.9,.3,1);
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg-a),var(--bg-b));color:#e8f7ff;font-family:Manrope,system-ui,-apple-system,Segoe UI,Roboto,Arial; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;}
+a{color:var(--accent1);text-decoration:none}
+button{font-family:inherit}
+
+/* canvas and stacking: canvas sits under content but still receives pointer events in empty areas */
+#bg{position:fixed;inset:0;z-index:0;display:block}
+
+/* site content stacks above canvas */
+.site{position:relative;z-index:2;max-width:var(--maxw);margin:0 auto;padding:28px;width:100%}
+
+/* header */
+.header{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.logo{font-family:Poppins,Manrope;font-weight:800;font-size:20px;background:linear-gradient(90deg,var(--accent1),var(--accent2));-webkit-background-clip:text;color:transparent}
+.header-controls{display:flex;gap:10px;align-items:center}
+.btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:9px 12px;border-radius:12px;color:var(--accent1);cursor:pointer}
+.btn-primary{background:linear-gradient(90deg,var(--accent1),var(--accent2));border:none;padding:10px 14px;border-radius:12px;color:#031026;font-weight:700;cursor:pointer;box-shadow:0 8px 30px rgba(40,150,250,0.06);transition:transform .25s var(--ease)}
+.btn-primary:hover{transform:translateY(-4px)}
+
+/* hero */
+.hero{display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:center;min-height:72vh;padding-top:18px}
+.hi{font-family:Poppins;font-weight:700;font-size:clamp(22px,4.2vw,40px);margin:0 0 12px}
+.tag{color:var(--muted);margin:0 0 18px;font-size:15px}
+.profile-card{background:linear-gradient(180deg,rgba(255,255,255,0.018),rgba(255,255,255,0.01));border-radius:var(--radius);padding:16px;border:1px solid rgba(255,255,255,0.03);backdrop-filter:blur(6px)}
+
+/* profile L mark */
+.mark-L{width:72px;height:72px;border-radius:999px;display:grid;place-items:center;font-family:Poppins;font-weight:800;font-size:28px;color:#031026;background:linear-gradient(90deg,var(--accent1),var(--accent2));box-shadow:0 8px 24px rgba(77,184,255,0.06)}
+
+/* sections */
+.section{padding:36px 0}
+.section-title{font-family:Poppins;font-weight:700;margin:0 0 14px;font-size:18px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+@media (max-width:980px){ .hero{grid-template-columns:1fr 1fr; grid-template-rows:auto auto} .grid{grid-template-columns:1fr} .header{padding:8px 0} .site{padding:18px} }
+
+/* sample cards */
+.card{position:relative;border-radius:12px;overflow:hidden;background:var(--glass);border:1px solid rgba(255,255,255,0.03);transition:transform .35s var(--ease),box-shadow .35s var(--ease)}
+.card:hover{transform:translateY(-8px);box-shadow:0 30px 80px rgba(40,140,220,0.08)}
+.video-wrap{position:relative;padding-top:56.25%;background:#000}
+.video-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.meta{padding:12px}
+.icon-btn{background:rgba(0,0,0,0.55);border:1px solid rgba(255,255,255,0.04);padding:8px;border-radius:8px;color:#eaf6ff;cursor:pointer}
+
+/* overlay top progress and to top */
+.progress{position:fixed;left:0;top:0;height:3px;background:linear-gradient(90deg,var(--accent1),var(--accent2));width:0;z-index:40}
+.to-top{position:fixed;right:18px;bottom:22px;background:linear-gradient(90deg,var(--accent1),var(--accent2));padding:10px;border-radius:10px;color:#031026;border:none;display:none;z-index:40;cursor:pointer}
+
+/* cursor */
+.cursor{position:fixed;left:0;top:0;width:14px;height:14px;border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);z-index:60;mix-blend-mode:screen;transition:transform .12s linear}
+
+/* intro overlay - will be removed quickly, but included for a crisp reveal */
+#intro{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,var(--bg-a),var(--bg-b));z-index:1000;transition:opacity .6s ease}
+#intro.hidden{opacity:0;pointer-events:none}
+
+/* accessibility */
+@media (prefers-reduced-motion:reduce){ .card,.btn-primary,.cursor { transition:none } }
+
+/* small helpers */
+.small{font-size:13px;color:var(--muted)}
 </style>
 </head>
 <body>
+<!-- progress bar -->
+<div class="progress" id="progress" aria-hidden="true"></div>
+
+<!-- canvas background -->
 <canvas id="bg" aria-hidden="true"></canvas>
 
-<div class="wrap">
-  <div class="container" role="main">
-    <header>
-      <div class="brand">
-        <div class="logo" aria-hidden="true">L</div>
-        <div>
-          <h1>Litecor</h1>
-          <div class="subtitle">Editor • Clipper • Short-form & Long-form</div>
-          <div class="lead">Fast • Clean • Attention-grabbing edits</div>
+<!-- intro overlay (robustly removed by inline script below) -->
+<div id="intro" role="status" aria-live="polite"><svg width="120" height="120" viewBox="0 0 120 120" aria-hidden="true" focusable="false"><defs><linearGradient id="gL" x1="0" x2="1"><stop offset="0" stop-color="#4db8ff"/><stop offset="1" stop-color="#7ae5ff"/></linearGradient></defs><rect rx="20" width="120" height="120" fill="transparent"/><text x="50%" y="60%" text-anchor="middle" dominant-baseline="middle" font-family="Poppins, Manrope" font-weight="800" font-size="56" fill="url(#gL)">L</text></svg></div>
+
+<!-- custom cursor -->
+<div id="cursor" class="cursor" aria-hidden="true" style="background:radial-gradient(circle at 30% 30%, rgba(122,229,255,0.95), rgba(77,184,255,0.75));box-shadow:0 0 18px rgba(77,184,255,0.12)"></div>
+
+<!-- main site content -->
+<div class="site" id="site">
+  <header class="header" role="banner">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div class="logo">Litecor</div>
+      <div class="small" style="opacity:.9">Editor, Clipper, Short-form, Tech, History</div>
+    </div>
+
+    <div class="header-controls" role="navigation" aria-label="Primary">
+      <button class="btn-ghost" onclick="scrollToSection('samples')">Portfolio</button>
+      <button class="btn-ghost" onclick="scrollToSection('contact')">Contact</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" aria-label="Intro">
+      <div>
+        <h1 class="hi">Hey, I’m Litecor, video editor and clipper</h1>
+        <p class="tag">Fast-paced, clean, attention-grabbing edits for shorts, tech, history, and many more</p>
+        <div style="display:flex;gap:12px;align-items:center" class="cta-row">
+          <button class="btn-primary" onclick="openContactModal('Get a Quote')">Get a Quote</button>
+          <button class="btn-ghost" onclick="scrollToSection('samples')">See Samples</button>
         </div>
+
+        <div style="margin-top:20px" class="small">Bringing 3–4 years of hands-on experience, I’ve partnered with a wide range of creators and brands, helping shape content that stands out in competitive niches. From short-form highlights to long-form storytelling, I’ve worked with top YouTubers such as Inspector Mindblow, consistently delivering edits that keep audiences hooked.</div>
       </div>
 
-      <div class="top-actions" role="navigation">
-        <button class="btn" onclick="scrollToSection('portfolio')">Portfolio</button>
-        <button class="btn" onclick="scrollToSection('contact')">Contact</button>
-      </div>
-    </header>
-
-    <div class="hero" aria-label="hero">
-      <div class="left">
-        <h2 style="margin:0 0 8px 0">Services</h2>
-        <p style="margin:0;color:#cfefff;opacity:0.85">Choose a pack — click <strong>Buy</strong> to open a quick booking form. The message is sent by email via Formspree (no payment required up front).</p>
-
-        <section id="portfolio" class="port" aria-label="portfolio">
-          <!-- CLIPPING -->
-          <div class="service" id="clipping">
-            <div class="videoSlot" aria-hidden="false">
-              <div class="videoWrap portrait" tabindex="0" aria-label="Clipping preview">
-                <iframe id="clipIframe" src="https://www.youtube.com/embed/EUgNKOv1H1M?rel=0&si=1" title="Clipping sample — Litecor" frameborder="0" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe>
-                <button class="fsBtn" aria-label="Enter fullscreen" onclick="enterFullscreenFor('#clipIframe')">⤢</button>
-              </div>
-            </div>
-            <div class="svc-info">
-              <div>
-                <div style="display:flex;justify-content:space-between;align-items:center">
-                  <div><strong>Clipping</strong><div style="font-size:13px;color:#bfe9ff;opacity:0.9">Quick cuts, SRT, thumbnails</div></div>
-                  <div class="price">$15<span style="font-size:12px;color:#cfefff;opacity:0.9">/day</span></div>
-                </div>
-                <div class="desc">Daily clipping & highlights delivered fast. Perfect for creators who publish frequently.</div>
-              </div>
-
-              <div class="actions">
-                <button class="btn" onclick="openContactModal('Clipping','$15/day')">Buy</button>
-                <div style="flex:1"></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- EDITING -->
-          <div class="service" id="editing">
-            <div class="videoSlot" aria-hidden="false">
-              <div class="videoWrap landscape" tabindex="0" aria-label="Editing preview">
-                <!-- editing iframe will be converted to a YT player by the API; onError we show fallback overlay -->
-                <iframe id="editIframe" src="https://www.youtube.com/embed/T4LQeFQnjWU?rel=0" title="Editing sample — Litecor" frameborder="0" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe>
-                <div class="unavailableOverlay" id="editUnavailable" role="status" aria-hidden="true">
-                  <div style="font-weight:800">This video can’t be played here</div>
-                  <div style="font-size:13px;opacity:0.9">Embedding is blocked or the video isn't available in this browser. Click below to open on YouTube.</div>
-                  <div style="display:flex;gap:8px">
-                    <button onclick="window.open('https://www.youtube.com/watch?v=T4LQeFQnjWU','_blank')">Watch on YouTube</button>
-                    <button onclick="tryReloadEdit()">Try reload</button>
-                  </div>
-                </div>
-                <button class="fsBtn" aria-label="Enter fullscreen" onclick="enterFullscreenFor('#editIframe')">⤢</button>
-              </div>
-            </div>
-            <div class="svc-info">
-              <div>
-                <div style="display:flex;justify-content:space-between;align-items:center">
-                  <div><strong>Editing</strong><div style="font-size:13px;color:#bfe9ff;opacity:0.9">Short-form & Long-form</div></div>
-                  <div>
-                    <div class="price">$49 <small style="font-size:12px;color:#cfefff;opacity:0.9">short-form</small></div>
-                    <div style="height:6px"></div>
-                    <div class="price" style="font-size:18px">$149 <small style="font-size:12px;color:#cfefff;opacity:0.9">long-form</small></div>
-                  </div>
-                </div>
-                <div class="desc">Short edits for socials and full long-form edits for YouTube / streams.</div>
-              </div>
-
-              <div class="actions">
-                <button class="btn" onclick="openContactModal('Short-form Editing','$49')">Buy short</button>
-                <button class="btn" onclick="openContactModal('Long-form Editing','$149')">Buy long</button>
-                <div style="flex:1"></div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-      </div>
-
-      <aside class="right metaCard" id="contact" aria-label="contact & socials">
-        <h3>Contact & socials</h3>
-
-        <div class="field">
+      <aside class="profile-card" aria-label="Contact and socials">
+        <div style="display:flex;gap:12px;align-items:center">
+          <div class="mark-L" aria-hidden="true">L</div>
           <div>
-            <div style="font-size:12px;opacity:0.85">X</div>
-            <a href="https://x.com/litecorx" target="_blank" rel="noopener">x.com/litecorx</a>
+            <div style="font-weight:800">Litecor</div>
+            <div class="small" style="margin-top:6px">Available for hire, quote or collab</div>
           </div>
-          <div><button class="copyBtn" onclick="openProfile('x')">Open</button></div>
         </div>
 
-        <div class="field">
-          <div>
-            <div style="font-size:12px;opacity:0.85">Discord</div>
-            <div style="font-weight:700;color:#cfefff">litecor</div>
-            <div style="font-size:12px;color:#bfe9ff;opacity:0.85">Copy tag to DM me</div>
-          </div>
-          <div><button class="copyBtn" onclick="copyToClipboard('litecor')">Copy</button></div>
+        <div style="margin-top:12px;display:flex;gap:8px">
+          <a class="btn-primary" href="https://x.com/litecorx" target="_blank" rel="noopener">Visit X</a>
+          <button class="btn-ghost" onclick="copyToClipboard('litecor')">Copy Discord</button>
         </div>
-
-        <div class="socials" aria-hidden="false" style="margin-top:10px">
-          <a href="https://x.com/litecorx" target="_blank" rel="noopener">Visit X</a>
-          <button class="copyBtn" onclick="copyToClipboard('litecor')">Copy Discord</button>
-        </div>
-
-        <div class="note">
-          Messages sent via the booking form are delivered to my inbox through Formspree. The email address provided will be used as the Reply‑To so I can reply directly — please enter a correct address. If you don't receive a reply, check your spam folder.
-        </div>
-        <div style="height:10px"></div>
       </aside>
-    </div>
+    </section>
 
-    <footer>
-      <div style="margin-top:12px">© Litecor — Editing Services · Clipping: $15/day · Short edit: $49 · Long edit: $149</div>
-    </footer>
-  </div>
-</div>
+    <section id="samples" class="section" aria-label="Samples">
+      <h2 class="section-title">Samples</h2>
+      <div class="grid" role="list">
+        <article class="card" role="listitem" aria-label="Clipping sample">
+          <div class="video-wrap">
+            <iframe id="clip1" class="video" loading="lazy" src="https://www.youtube.com/embed/rL5xSkTtBp8?autoplay=1&mute=1&loop=1&playlist=rL5xSkTtBp8&controls=0&modestbranding=1&playsinline=1" title="Clipping sample, Litecor" allow="autoplay; fullscreen; picture-in-picture"></iframe>
+          </div>
+          <div class="meta"><div class="title">Clipping sample</div><div class="desc">Auto-play muted loop, tap unmute to enable sound</div></div>
+          <div class="overlay-controls"><button class="icon-btn" onclick="toggleSound('clip1',this)">Unmute</button></div>
+        </article>
 
-<!-- CONTACT MODAL -->
-<div id="contactModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
-  <div class="modalCard" role="document" aria-labelledby="modalTitle">
-    <div class="modalHeader">
-      <div>
-        <h3 id="modalTitle">Start booking</h3>
-        <div id="modalSub" style="font-size:13px;color:#cfefff;opacity:0.9">Fill and send — no payment required up front.</div>
+        <article class="card" role="listitem" aria-label="Editing sample">
+          <div class="video-wrap">
+            <iframe id="clip2" class="video" loading="lazy" src="https://www.youtube.com/embed/T4LQeFQnjWU?autoplay=1&mute=1&loop=1&playlist=T4LQeFQnjWU&controls=0&modestbranding=1&playsinline=1" title="Editing sample, Litecor" allow="autoplay; fullscreen; picture-in-picture"></iframe>
+          </div>
+          <div class="meta"><div class="title">Editing sample</div><div class="desc">Auto-play muted loop, tap unmute to enable sound</div></div>
+          <div class="overlay-controls"><button class="icon-btn" onclick="toggleSound('clip2',this)">Unmute</button></div>
+        </article>
       </div>
-      <div>
-        <button class="btn" id="closeModalBtn" onclick="closeContactModal()">Close</button>
-      </div>
-    </div>
+    </section>
 
-    <div style="margin-top:12px">
-      <form id="modalForm" class="modalForm" action="https://formspree.io/f/meorknln" method="POST" novalidate>
-        <input type="hidden" name="service" id="modalService" value="">
-        <label for="modalName">Your name</label>
-        <input id="modalName" name="name" type="text" placeholder="Your name" required />
-
-        <label for="modalEmail">Your email</label>
-        <input id="modalEmail" name="email" type="email" placeholder="you@example.com" required />
-
-        <label for="modalMessage">Message</label>
-        <textarea id="modalMessage" name="message" rows="4" placeholder="Hi Litecor — I'm interested in..." required></textarea>
-
-        <div style="display:flex;gap:10px;align-items:center">
-          <button type="submit">Send message</button>
-          <div id="modalFormStatus" style="margin-left:8px;color:#bfe9ff;font-size:13px"></div>
+    <section id="contact" class="section" aria-label="Contact">
+      <h2 class="section-title">Contact</h2>
+      <form id="contactForm" action="https://formspree.io/f/meorknln" method="POST" style="max-width:720px">
+        <input name="name" placeholder="Your name" required style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit;">
+        <input name="email" placeholder="you@example.com" required style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit;margin-top:8px;">
+        <textarea name="message" rows="5" placeholder="Hi Litecor, I'm interested in..." required style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit;margin-top:8px;"></textarea>
+        <div style="display:flex;gap:10px;align-items:center;margin-top:10px">
+          <button class="btn-primary" type="submit">Send message</button>
+          <div id="formStatus" class="small"></div>
         </div>
       </form>
+    </section>
+
+    <footer class="footer small">
+      <div>
+        <div style="font-weight:800">Litecor, Editor, Clipper</div>
+        <div class="small">© Litecor, Editing Services, 2025</div>
+      </div>
+      <div class="small">About, Portfolio, Contact, Socials</div>
+    </footer>
+  </main>
+</div>
+
+<!-- modal for Get a Quote -->
+<div id="modal" aria-hidden="true" style="display:none;position:fixed;inset:0;align-items:center;justify-content:center;background:linear-gradient(180deg,rgba(2,4,8,0.6),rgba(2,4,6,0.85));z-index:1200;">
+  <div style="max-width:720px;width:94%;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border-radius:12px;padding:18px;border:1px solid rgba(255,255,255,0.03);backdrop-filter:blur(6px);margin:auto;">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div style="font-weight:800">Start booking</div>
+      <button onclick="closeContactModal()" class="btn-ghost">Close</button>
     </div>
+    <form id="modalForm" action="https://formspree.io/f/meorknln" method="POST" style="margin-top:12px">
+      <input type="hidden" name="service" id="modalService" value="Get a Quote">
+      <input name="name" placeholder="Your name" required style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit;margin-top:8px;">
+      <input name="email" placeholder="you@example.com" required style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit;margin-top:8px;">
+      <textarea name="message" rows="4" placeholder="Project details..." required style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit;margin-top:8px;"></textarea>
+      <div style="display:flex;gap:10px;align-items:center;margin-top:10px">
+        <button class="btn-primary" type="submit">Send message</button>
+        <div id="modalStatus" class="small"></div>
+      </div>
+    </form>
   </div>
 </div>
 
-<script>
-/* Modal & Formspree wiring (unchanged) */
-const $ = s => document.querySelector(s);
-function openContactModal(service, price){
-  const modal = document.getElementById('contactModal');
-  document.getElementById('modalService').value = service + (price ? ' ' + price : '');
-  document.getElementById('modalMessage').value = `Hi Litecor,\n\nI'm interested in ${service}${price ? ' — ' + price : ''}.\nPlease let me know next steps and availability.\n\nThanks.`;
-  modal.style.display = 'flex';
-  modal.setAttribute('aria-hidden','false');
-  setTimeout(()=> document.getElementById('modalEmail').focus(), 120);
-  document.body.style.overflow = 'hidden';
-}
-function closeContactModal(){
-  const modal = document.getElementById('contactModal');
-  modal.style.display = 'none';
-  modal.setAttribute('aria-hidden','true');
-  document.body.style.overflow = '';
-}
-addEventListener('keydown', (e)=> { if(e.key === 'Escape') closeContactModal(); });
+<!-- back to top -->
+<button id="toTop" class="to-top" aria-label="Back to top">Top</button>
 
-document.getElementById('modalForm').addEventListener('submit', async function(e){
-  e.preventDefault();
-  const statusEl = document.getElementById('modalFormStatus');
-  statusEl.textContent = 'Sending...';
-  const form = e.target;
+<script>
+/* ----------------------------------------------------------------------
+   Utilities
+   - onReady: ensures code runs when DOM is ready but not delayed by other issues
+   - safeFetchPost: small helper for Formspree posts
+   ---------------------------------------------------------------------- */
+function onReady(fn){ if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn); else fn(); }
+async function safeFetchPost(url, form){ try{ const res = await fetch(url, {method:'POST', body: new FormData(form), headers: {'Accept':'application/json'}}); return res; }catch(e){ return null; }}
+
+/* ----------------------------------------------------------------------
+   Intro hide: ultra-robust removal
+   - runs immediately and has many fallbacks so it cannot get stuck
+   ---------------------------------------------------------------------- */
+(function immediateIntroFix(){
   try{
-    const res = await fetch(form.action, {
-      method: 'POST',
-      body: new FormData(form),
-      headers: { 'Accept': 'application/json' }
+    const intro = document.getElementById('intro');
+    if(!intro) return;
+    let removed = false;
+    const hide = () => {
+      if(removed) return;
+      removed = true;
+      try{ intro.classList.add('hidden'); intro.setAttribute('aria-hidden','true'); }catch(e){}
+      setTimeout(()=>{ try{ if(intro && intro.parentNode) intro.parentNode.removeChild(intro); }catch(e){} }, 800);
+    };
+    // run soon after parsing
+    requestAnimationFrame(()=>setTimeout(hide, 650));
+    // on load, and on first interaction
+    window.addEventListener('load', hide, {passive:true});
+    ['click','touchstart','keydown','mousemove'].forEach(evt => window.addEventListener(evt, hide, {passive:true, once:true}));
+    // absolute fallback removal
+    setTimeout(()=>{ try{ hide(); }catch(e){} }, 4500);
+  }catch(e){ try{ document.getElementById('intro')?.remove(); }catch(_){} }
+})();
+
+/* ----------------------------------------------------------------------
+   Custom cursor
+   ---------------------------------------------------------------------- */
+onReady(()=> {
+  const cursor = document.getElementById('cursor');
+  if('ontouchstart' in window || navigator.maxTouchPoints > 0){ cursor.style.display = 'none'; return; }
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+  }, {passive:true});
+});
+
+/* ----------------------------------------------------------------------
+   Progress bar and toTop
+   ---------------------------------------------------------------------- */
+onReady(()=>{
+  const prog = document.getElementById('progress');
+  const toTop = document.getElementById('toTop');
+  function update(){ const h = document.documentElement.scrollHeight - window.innerHeight; const pct = h > 0 ? (window.scrollY / h) * 100 : 0; prog.style.width = pct + '%'; toTop.style.display = window.scrollY > 240 ? 'block' : 'none'; }
+  update();
+  window.addEventListener('scroll', update, {passive:true});
+  toTop.addEventListener('click', ()=> window.scrollTo({top:0,behavior:'smooth'}));
+});
+
+/* ----------------------------------------------------------------------
+   Smooth scroll helper
+   ---------------------------------------------------------------------- */
+function scrollToSection(id){
+  try{
+    const el = document.getElementById((id||'').replace(/^#/,''));
+    if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+  }catch(e){}
+}
+
+/* ----------------------------------------------------------------------
+   Contact forms (inline and modal)
+   ---------------------------------------------------------------------- */
+onReady(()=>{
+  const form = document.getElementById('contactForm');
+  if(form){
+    form.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const status = document.getElementById('formStatus');
+      if(status) status.textContent = 'Sending...';
+      const res = await safeFetchPost(form.action, form);
+      if(res && res.ok){ if(status) status.textContent = 'Message sent, I will reply soon.'; form.reset(); setTimeout(()=> status && (status.textContent=''), 1600); }
+      else { if(status) status.textContent = 'Sending failed, try X or Discord.'; }
     });
-    if(res.ok){
-      statusEl.textContent = 'Message sent — I will reply soon.';
-      statusEl.classList.add('success');
-      form.reset();
-      setTimeout(()=> { closeContactModal(); statusEl.textContent = ''; statusEl.classList.remove('success'); }, 1400);
-    } else {
-      const data = await res.json().catch(()=>null);
-      statusEl.textContent = data && data.error ? data.error : 'Sending failed — try messaging on X or Discord.';
-    }
-  } catch(err){
-    statusEl.textContent = 'Network error — try messaging on X or Discord.';
+  }
+
+  const modalForm = document.getElementById('modalForm');
+  if(modalForm){
+    modalForm.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const status = document.getElementById('modalStatus');
+      if(status) status.textContent = 'Sending...';
+      const res = await safeFetchPost(modalForm.action, modalForm);
+      if(res && res.ok){ if(status) status.textContent = 'Message sent.'; modalForm.reset(); setTimeout(()=> { status.textContent=''; closeContactModal(); }, 1400); }
+      else { if(status) status.textContent = 'Sending failed.'; }
+    });
   }
 });
 
-/* Fullscreen helper (same) */
-function enterFullscreenFor(selectorOrEl){
-  const el = (typeof selectorOrEl === 'string') ? document.querySelector(selectorOrEl) : selectorOrEl;
-  if(!el) return;
-  const container = el.closest('.videoSlot') || el;
-  if(container.requestFullscreen) {
-    container.requestFullscreen();
-  } else if(container.webkitRequestFullscreen) {
-    container.webkitRequestFullscreen();
-  } else if(container.msRequestFullscreen) {
-    container.msRequestFullscreen();
-  } else {
-    alert('Fullscreen not supported by this browser.');
-  }
+/* open/close modal */
+function openContactModal(service){
+  try{
+    const m = document.getElementById('modal'); const fld = document.getElementById('modalService');
+    if(fld) fld.value = service || 'Get a Quote';
+    m.style.display = 'flex'; m.setAttribute('aria-hidden','false');
+    setTimeout(()=> { const first = m.querySelector('input[name="name"]'); if(first) first.focus(); }, 120);
+    document.body.style.overflow = 'hidden';
+  }catch(e){}
+}
+function closeContactModal(){ try{ const m = document.getElementById('modal'); m.style.display = 'none'; m.setAttribute('aria-hidden','true'); document.body.style.overflow = ''; }catch(e){} }
+window.addEventListener('keydown', e => { if(e.key === 'Escape') closeContactModal(); });
+
+/* ----------------------------------------------------------------------
+   Clipboard helper
+   ---------------------------------------------------------------------- */
+function copyToClipboard(txt){
+  try{ navigator.clipboard?.writeText(txt); }catch(e){}
 }
 
-/* YouTube IFrame API handling for editIframe */
-(function loadYT(){
-  if(window.YT && YT.Player) { initEditPlayer(); return; }
-  var tag = document.createElement('script');
-  tag.src = "https://www.youtube.com/iframe_api";
-  var first = document.getElementsByTagName('script')[0];
-  first.parentNode.insertBefore(tag, first);
+/* ----------------------------------------------------------------------
+   YouTube toggles
+   - uses iframe src reload toggle for simplicity and browser compatibility
+   ---------------------------------------------------------------------- */
+function toggleSound(iframeId, btn){
+  try{
+    const iframe = document.getElementById(iframeId);
+    if(!iframe) return;
+    const src = iframe.getAttribute('src') || '';
+    // normalize: ensure mute param exists
+    const hasMute1 = /mute=1/.test(src);
+    const hasMute0 = /mute=0/.test(src);
+    let newSrc = src;
+    if(hasMute1) newSrc = src.replace(/mute=1/,'mute=0');
+    else if(hasMute0) newSrc = src.replace(/mute=0/,'mute=1');
+    else {
+      newSrc = src + (src.includes('?') ? '&' : '?') + 'mute=0';
+    }
+    iframe.setAttribute('src', newSrc);
+    if(btn) btn.textContent = /mute=0/.test(newSrc) ? 'Mute' : 'Unmute';
+  }catch(e){}
+}
+
+/* ----------------------------------------------------------------------
+   Particles: clickable, efficient, reduced CPU load
+   - canvas sits behind content but still receives clicks in empty spaces
+   - click bursts and clicking particle scrolls to samples
+   ---------------------------------------------------------------------- */
+(function particlesSetup(){
+  const canvas = document.getElementById('bg');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d', {alpha:true});
+  let DPR = Math.min(window.devicePixelRatio || 1, 2);
+  let W = 0, H = 0;
+  let particles = [];
+  let mouse = {x:-9999, y:-9999};
+  let reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function resize(){
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.max(300, Math.floor(window.innerWidth * DPR));
+    canvas.height = Math.max(200, Math.floor(window.innerHeight * DPR));
+    canvas.style.width = window.innerWidth + 'px';
+    canvas.style.height = window.innerHeight + 'px';
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    W = window.innerWidth; H = window.innerHeight;
+    makeParticles();
+  }
+
+  function makeParticles(){
+    particles = [];
+    const area = Math.max(50000, W * H);
+    // conservative scaling for performance
+    const base = W < 600 ? 0.00008 : 0.00012;
+    const count = Math.max(18, Math.floor(area * base));
+    for(let i=0;i<count;i++){
+      particles.push({
+        x: Math.random()*W,
+        y: Math.random()*H,
+        r: Math.random()*1.6 + 0.6,
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: (Math.random() - 0.5) * 0.4,
+        alpha: 0.45 + Math.random()*0.55,
+        pulse: 1
+      });
+    }
+  }
+
+  function burst(x,y,amount=14){
+    for(let i=0;i<amount;i++){
+      particles.push({
+        x: x + (Math.random()-0.5)*16,
+        y: y + (Math.random()-0.5)*16,
+        r: Math.random()*2.6 + 0.8,
+        vx: (Math.random()-0.5) * 3,
+        vy: (Math.random()-0.5) * 3,
+        alpha: 0.95,
+        pulse: 1.6
+      });
+    }
+    // trim
+    if(particles.length > 900) particles.splice(0, particles.length - 420);
+  }
+
+  function findNearest(x,y, max=36){
+    let nearest = null, nd = Infinity;
+    for(const p of particles){
+      const dx = p.x - x, dy = p.y - y, d2 = dx*dx + dy*dy;
+      if(d2 < nd){ nd = d2; nearest = p; }
+    }
+    return nd < max*max ? nearest : null;
+  }
+
+  function draw(){
+    if(reduced){ ctx.clearRect(0,0,W,H); requestAnimationFrame(draw); return; }
+    ctx.clearRect(0,0,W,H);
+    // background subtle fill for depth
+    const g = ctx.createLinearGradient(0,0,W,H);
+    g.addColorStop(0, 'rgba(2,6,12,0.25)');
+    g.addColorStop(1, 'rgba(4,10,18,0.45)');
+    ctx.fillStyle = g; ctx.fillRect(0,0,W,H);
+
+    // connections
+    for(let i=0;i<particles.length;i++){
+      const a = particles[i];
+      for(let j=i+1;j<particles.length;j++){
+        const b = particles[j];
+        const dx = a.x - b.x, dy = a.y - b.y;
+        const d2 = dx*dx + dy*dy;
+        if(d2 < 120*120){
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.strokeStyle = 'rgba(77,184,255,' + (0.06 * (1 - Math.sqrt(d2)/120)) + ')';
+          ctx.lineWidth = 0.6;
+          ctx.stroke();
+        }
+      }
+    }
+
+    // particles
+    for(const p of particles){
+      // subtle attraction to mouse
+      const dx = mouse.x - p.x, dy = mouse.y - p.y;
+      if(Math.abs(dx) < 140 && Math.abs(dy) < 140){
+        const d = Math.sqrt(dx*dx + dy*dy) + 0.0001;
+        p.vx += (dx/d) * 0.0015;
+        p.vy += (dy/d) * 0.0015;
+      } else {
+        p.vx += (Math.random()-0.5) * 0.002;
+        p.vy += (Math.random()-0.5) * 0.002;
+      }
+      // clamp
+      p.vx = Math.max(-1.2, Math.min(1.2, p.vx));
+      p.vy = Math.max(-1.2, Math.min(1.2, p.vy));
+
+      p.x += p.vx;
+      p.y += p.vy;
+
+      if(p.x < -20) p.x = W + 20;
+      if(p.x > W + 20) p.x = -20;
+      if(p.y < -20) p.y = H + 20;
+      if(p.y > H + 20) p.y = -20;
+
+      const rr = p.r * (p.pulse || 1);
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, rr, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(122,229,255,' + (p.alpha * 0.85) + ')';
+      ctx.fill();
+
+      if(p.pulse && p.pulse > 1){ p.pulse -= 0.03; if(p.pulse <= 1) p.pulse = 1; }
+    }
+
+    requestAnimationFrame(draw);
+  }
+
+  // pointer interactions on canvas
+  canvas.addEventListener('pointermove', e => {
+    const rect = canvas.getBoundingClientRect();
+    mouse.x = e.clientX - rect.left;
+    mouse.y = e.clientY - rect.top;
+    const nearest = findNearest(mouse.x, mouse.y, 28);
+    // show pointer when near a particle, otherwise default
+    canvas.style.cursor = nearest ? 'pointer' : 'default';
+  }, {passive:true});
+
+  canvas.addEventListener('pointerdown', e => {
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left, y = e.clientY - rect.top;
+    burst(x, y, 18);
+    const nearest = findNearest(x, y, 36);
+    if(nearest){
+      nearest.pulse = 2.2;
+      // clicking a particle scrolls to samples for engagement
+      try{ scrollToSection('samples'); }catch(err){}
+    }
+  }, {passive:true});
+
+  // initialize
+  resize();
+  window.addEventListener('resize', resize, {passive:true});
+  requestAnimationFrame(draw);
+
+  // expose for debug
+  window.litecorParticles = { burst, particles };
 })();
 
-function onYouTubeIframeAPIReady(){ initEditPlayer(); }
+/* ----------------------------------------------------------------------
+   Accessibility: ensure pressing Escape closes modal, handle possible errors
+   ---------------------------------------------------------------------- */
+window.addEventListener('keydown', e => { if(e.key === 'Escape') closeContactModal(); });
 
-function initEditPlayer(){
-  try{
-    new YT.Player('editIframe', {
-      playerVars: { rel:0, modestbranding:1 },
-      events: { 'onError': function(e){ handleEditError(e); } }
-    });
-  }catch(err){
-    showEditFallback('player-init-failed');
-  }
-}
-
-function handleEditError(event){
-  const code = event && event.data;
-  if(code === 100 || code === 101 || code === 150 || code === 5){
-    showEditFallback(code);
-  }
-}
-
-function showEditFallback(code){
-  const overlay = document.getElementById('editUnavailable');
-  if(!overlay) return;
-  overlay.style.display = 'flex';
-  overlay.setAttribute('aria-hidden','false');
-  console.warn('YouTube embed fallback shown for editIframe; code:', code);
-}
-
-function tryReloadEdit(){
-  const iframe = document.getElementById('editIframe');
-  if(!iframe) return;
-  const overlay = document.getElementById('editUnavailable');
-  if(overlay) overlay.style.display = 'none';
-  const src = iframe.getAttribute('src').split('?')[0];
-  iframe.setAttribute('src', src + '?rel=0&cb=' + Date.now());
-  setTimeout(()=>{ try{ if(window.YT && YT.Player){ initEditPlayer(); } }catch(e){} }, 900);
-}
-
-/* Particle background (unchanged) */
-const canvas = document.getElementById('bg');
-const ctx = canvas.getContext('2d', { alpha: true });
-let DPR = Math.min(window.devicePixelRatio || 1, 2);
-let W = canvas.width = innerWidth * DPR;
-let H = canvas.height = innerHeight * DPR;
-canvas.style.width = innerWidth + 'px'; canvas.style.height = innerHeight + 'px';
-ctx.setTransform(1,0,0,1,0,0); ctx.scale(DPR, DPR);
-let particles = [];
-function createParticles(){ particles.length=0; const area=innerWidth*innerHeight; const base = innerWidth<600?0.00015:0.00025; const count=Math.max(28, Math.floor(area*base)); for(let i=0;i<count;i++){ particles.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:Math.random()*2.2+0.6,vx:(Math.random()-0.5)*0.4,vy:(Math.random()-0.5)*0.4,alpha:0.6+Math.random()*0.4}); } }
-createParticles();
-let lastFrame = performance.now(); const FPS=30; const MS_PER_FRAME=1000/FPS; let run=true; const mouse={x:innerWidth/2,y:innerHeight/2,down:false};
-function draw(now){ if(!run){ lastFrame=now; requestAnimationFrame(draw); return; } const dt=now-lastFrame; if(dt<MS_PER_FRAME){ requestAnimationFrame(draw); return; } lastFrame=now; ctx.clearRect(0,0,innerWidth,innerHeight); const g=ctx.createLinearGradient(0,0,innerWidth,innerHeight); g.addColorStop(0,'rgba(6,12,22,0.12)'); g.addColorStop(1,'rgba(3,7,12,0.18)'); ctx.fillStyle=g; ctx.fillRect(0,0,innerWidth,innerHeight); for(let i=0;i<particles.length;i++){ const a=particles[i]; for(let j=i+1;j<particles.length;j++){ const b=particles[j]; const dx=a.x-b.x, dy=a.y-b.y; const d2=dx*dx+dy*dy; if(d2<110*110){ ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.strokeStyle='rgba(120,190,255,'+(0.06*(1-Math.sqrt(d2)/110))+')'; ctx.lineWidth=0.8; ctx.stroke(); } } } for(let p of particles){ const dx=mouse.x-p.x, dy=mouse.y-p.y; if(Math.abs(dx)<120 && Math.abs(dy)<120){ const d=Math.sqrt(dx*dx+dy*dy)+0.0001; p.vx += (dx/d)*0.002; p.vy += (dy/d)*0.002; } else { p.vx += (Math.random()-0.5)*0.002; p.vy += (Math.random()-0.5)*0.002; } p.vx = Math.max(-1, Math.min(1, p.vx)); p.vy = Math.max(-1, Math.min(1, p.vy)); p.x += p.vx; p.y += p.vy; if(p.x < -10) p.x = innerWidth + 10; if(p.x > innerWidth + 10) p.x = -10; if(p.y < -10) p.y = innerHeight + 10; if(p.y > innerHeight + 10) p.y = -10; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fillStyle = 'rgba(160,220,255,'+(p.alpha*0.9)+')'; ctx.fill(); } requestAnimationFrame(draw); }
-requestAnimationFrame(draw);
-window.addEventListener('mousemove', e=>{ mouse.x=e.clientX; mouse.y=e.clientY; });
-window.addEventListener('touchmove', e=>{ if(e.touches[0]){ mouse.x=e.touches[0].clientX; mouse.y=e.touches[0].clientY; } }, {passive:true});
-function burstAt(x,y,amount=18){ for(let i=0;i<amount;i++){ particles.push({ x:x+(Math.random()-0.5)*8, y:y+(Math.random()-0.5)*8, r:Math.random()*2.6+0.6, vx:(Math.random()-0.5)*3.6, vy:(Math.random()-0.5)*3.6, alpha:0.95 }); } if(particles.length>800) particles.splice(0, particles.length-420); }
-canvas.addEventListener('pointerdown', (e)=>{ const rect=canvas.getBoundingClientRect(); const x=e.clientX-rect.left; const y=e.clientY-rect.top; burstAt(x,y,20); });
-document.body.addEventListener('click', (e)=>{ const el=e.target; if(el.closest('button')||el.closest('a')||el.closest('input')||el.closest('video')||el.closest('textarea')) return; burstAt(e.clientX,e.clientY,12); });
-
-/* small helpers used in UI */
-function copyToClipboard(text){ navigator.clipboard?.writeText(text).then(()=>{/*noop*/}).catch(()=>{}); }
-function openProfile(which){
-  if(which === 'x') window.open('https://x.com/litecorx','_blank');
-}
 </script>
 </body>
 </html>
+
